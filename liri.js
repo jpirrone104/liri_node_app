@@ -1,6 +1,14 @@
 require("dotenv").config();
 var keys = require("./keys.js");
+var axios = require("axios");
 var spotify = new Spotify(keys.spotify);
+
+var userInput1 = process.argv[2];
+var userInput2 = "";
+
+for (var i = 4; i < process.argv.length; i++) {
+    userInput2 += '+' + process.argv[i];
+}
 
 // `node liri.js concert-this <artist/band name here>`
 
@@ -30,16 +38,28 @@ var spotify = new Spotify(keys.spotify);
 
 //    * This will output the following information to your terminal/bash window:
 
-//      ```
-//        * Title of the movie.
-//        * Year the movie came out.
-//        * IMDB Rating of the movie.
-//        * Rotten Tomatoes Rating of the movie.
-//        * Country where the movie was produced.
-//        * Language of the movie.
-//        * Plot of the movie.
-//        * Actors in the movie.
-//      ```
+function getMovie() {
+    var movieName = "";
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+
+    // This line is just to help us debug against the actual URL.
+    console.log(queryUrl);
+
+    axios.get(queryUrl).then(
+    function(response) {
+        console.log("This movie's title is: " + response.data.Name);
+        console.log("The release year of this movie is: " + response.data.Year);
+        console.log("This movie's IMDB rating is: " + response.data.imdbRating);
+        console.log("This movie's Rotten Tomatoes rating is: " + response.data.Ratings[1].Value);
+        console.log("This movie was made in: " + response.data.Country);
+        console.log("This movie's language is: " + response.data.Language);
+        console.log("This movie's plot is: " + response.data.Plot);
+        console.log("This movie stars: " + response.data.Actors);
+        console.log("--------------------------------------------");
+    }
+    );
+}
+
 
 //    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
 
@@ -50,3 +70,22 @@ var spotify = new Spotify(keys.spotify);
 //      * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
 
 //      * Edit the text in random.txt to test out the feature for movie-this and concert-this.
+
+switch (userInput1) {
+
+    case "movie-this":
+        getMovie();
+        break;
+
+    case "spotify-this-song":
+        getSpotify();
+        break;
+
+    case "movie-this":
+        getMovie();
+        break;
+
+    case "do-what-it-says":
+        doWhat();
+        break;
+}
