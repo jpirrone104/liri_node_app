@@ -18,9 +18,33 @@ for (var i = 3; i < process.argv.length; i++) {
     }
 }
 
-// `node liri.js concert-this <artist/band name here>`
+function getConcert() {
 
-//    * This will search the Bands in Town Artist Events API (`"https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"`) for an artist and render the following information about each event to the terminal:
+    var artistName = userInput2
+    var queryUrl = "https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp";
+
+    // debug the actual URL
+    console.log(queryUrl);
+
+    axios.get(queryUrl).then(
+    function(response) {
+
+        var bandData = response;
+
+        if (bandData.length > 0) {
+            for(var i = 0; i < bandData.length; i++) {
+                console.log("--------------------------------------------")
+                console.log("This movie's title is: " + bandData[i]);
+        
+                console.log("--------------------------------------------");
+
+            }
+        }
+
+        
+    });
+}
+
 
 //      * Name of the venue
 
@@ -42,16 +66,14 @@ for (var i = 3; i < process.argv.length; i++) {
 
 //    * If no song is provided then your program will default to "The Sign" by Ace of Base.
 
-// `node liri.js movie-this '<movie name here>'`
 
-//    * This will output the following information to your terminal/bash window:
-var movieName = userInput2
 
 function getMovie() {
 
+    var movieName = userInput2
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
-    // This line is just to help us debug against the actual URL.
+    // debug the actual URL
     console.log(queryUrl);
 
     axios.get(queryUrl).then(
@@ -82,6 +104,12 @@ function getMovie() {
 
 //      * Edit the text in random.txt to test out the feature for movie-this and concert-this.
 
+function displayInstructions() {
+
+    console.log("Welcome to the Liri Bot! \n------------------\nTo search for a movie, type movie-this, followed by the movie title. \n------------------\nTo search for concerts type concert-this, followed by the artist name. \n------------------ \nTo search for an artist or song, type spotify-this-song, followed by the artist or song title")
+
+}
+
 switch (userInput1) {
 
     case "movie-this":
@@ -92,11 +120,14 @@ switch (userInput1) {
         getSpotify();
         break;
 
-    case "movie-this":
-        getMovie();
+    case "concert-this":
+        getConcert();
         break;
 
     case "do-what-it-says":
         doWhat();
+        break;
+    default: 
+        displayInstructions();
         break;
 }
