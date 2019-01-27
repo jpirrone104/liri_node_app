@@ -1,9 +1,10 @@
-// require("dotenv").config();
-// var keys = require("./keys.js");
+require("dotenv").config();
+var keys = require("./keys.js");
+var Spotify = require("node-spotify-api");
 var axios = require("axios");
-// var request = require("request");
 var moment = require("moment");
-// var spotify = new Spotify(keys.spotify);
+
+var spotify = new Spotify(keys.spotify);
 
 var userInput1 = process.argv[2];
 var userInput2 = "";
@@ -25,8 +26,8 @@ function getConcert() {
     var artistName = userInput2
     var bandsqueryUrl = "https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp";
 
-    // debug the actual URL
-    console.log(bandsqueryUrl);
+    // // debug the actual URL
+    // console.log(bandsqueryUrl);
 
     axios.get(bandsqueryUrl).then(function(response) {
 
@@ -57,6 +58,18 @@ function getConcert() {
 
 }
 
+function getSpotify() {
+
+    var songName = userInput2
+
+    spotify.search({ type: 'track', query: songName }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+       
+      console.log(data); 
+      });
+}
 
 // `node liri.js spotify-this-song '<song name here>'`
 
@@ -79,8 +92,8 @@ function getMovie() {
     var movieName = userInput2
     var moviequeryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
-    // debug the actual URL
-    console.log(moviequeryUrl);
+    // // debug the actual URL
+    // console.log(moviequeryUrl);
 
     if(movieName !== "") {
         axios.get(moviequeryUrl).then(
