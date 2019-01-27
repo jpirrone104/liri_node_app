@@ -1,13 +1,21 @@
-require("dotenv").config();
-var keys = require("./keys.js");
+// require("dotenv").config();
+// var keys = require("./keys.js");
 var axios = require("axios");
-var spotify = new Spotify(keys.spotify);
+// var spotify = new Spotify(keys.spotify);
 
 var userInput1 = process.argv[2];
 var userInput2 = "";
 
-for (var i = 4; i < process.argv.length; i++) {
-    userInput2 += '+' + process.argv[i];
+for (var i = 3; i < process.argv.length; i++) {
+
+    if(i > 3 && i < process.argv.length) {
+
+    userInput2 = userInput2 + '+' + process.argv[i];
+
+    } else {
+
+        userInput2 += process.argv[i];
+    }
 }
 
 // `node liri.js concert-this <artist/band name here>`
@@ -37,9 +45,10 @@ for (var i = 4; i < process.argv.length; i++) {
 // `node liri.js movie-this '<movie name here>'`
 
 //    * This will output the following information to your terminal/bash window:
+var movieName = userInput2
 
 function getMovie() {
-    var movieName = "";
+
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
     // This line is just to help us debug against the actual URL.
@@ -47,7 +56,9 @@ function getMovie() {
 
     axios.get(queryUrl).then(
     function(response) {
-        console.log("This movie's title is: " + response.data.Name);
+
+        console.log("--------------------------------------------")
+        console.log("This movie's title is: " + response.data.Title);
         console.log("The release year of this movie is: " + response.data.Year);
         console.log("This movie's IMDB rating is: " + response.data.imdbRating);
         console.log("This movie's Rotten Tomatoes rating is: " + response.data.Ratings[1].Value);
