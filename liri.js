@@ -1,6 +1,7 @@
 // require("dotenv").config();
 // var keys = require("./keys.js");
 var axios = require("axios");
+var request = require("request");
 // var spotify = new Spotify(keys.spotify);
 
 var userInput1 = process.argv[2];
@@ -26,22 +27,23 @@ function getConcert() {
     // debug the actual URL
     console.log(queryUrl);
 
-    axios.get(queryUrl).then(
-    function(response) {
+    request((queryUrl), function(error, response, body) {
 
-        var bandData = response;
+        if (!error && response.statusCode === 200) {
+
+        var bandData = JSON.parse(body);
 
         if (bandData.length > 0) {
             for(var i = 0; i < bandData.length; i++) {
                 console.log("--------------------------------------------")
-                console.log("This movie's title is: " + bandData[i]);
+                console.log("This movie's title is: " + bandData[i].venue.name);
         
                 console.log("--------------------------------------------");
 
             }
         }
 
-        
+    }
     });
 }
 
