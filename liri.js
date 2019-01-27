@@ -2,7 +2,7 @@
 // var keys = require("./keys.js");
 var axios = require("axios");
 // var request = require("request");
-// var moment = require("moment");
+var moment = require("moment");
 // var spotify = new Spotify(keys.spotify);
 
 var userInput1 = process.argv[2];
@@ -33,34 +33,30 @@ function getConcert() {
         
 
         var bandData = response.data;
+        var artistName2 = artistName.replace(/\+/g, " ");
 
         if (bandData.length > 0) {
 
-            var artistName2 = artistName.replace(/\+/g, " ");
+            // var artistName2 = artistName.replace(/\+/g, " ");
 
-            console.log("Here is a list of upcoming shows for " + artistName2)
+            console.log("\nHere is a list of upcoming shows for: " + artistName2 + "\n")
 
             for(var i = 0; i < 5; i++) {
                 
                 console.log("--------------------------------------------")
                 console.log("Venue: " + bandData[i].venue.name);
                 console.log("Location: " + bandData[i].venue.country + ", " + bandData[i].venue.city);
-                console.log("Date: " + bandData[i].venue.name)
+                console.log("Date: " + moment(bandData[i].venue.datetime).format('MM/DD/YYYY'))
 
             }
+        } else {
+            console.log("\nOops, looks like there are no upcoming shows for " + artistName2 + "\n")
         }
 
     });
 
 }
 
-
-
-//      * Name of the venue
-
-//      * Venue location
-
-//      * Date of the Event (use moment to format this as "MM/DD/YYYY")
 
 // `node liri.js spotify-this-song '<song name here>'`
 
@@ -81,26 +77,45 @@ function getConcert() {
 function getMovie() {
 
     var movieName = userInput2
-    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+    var moviequeryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
     // debug the actual URL
-    console.log(queryUrl);
+    console.log(moviequeryUrl);
 
-    axios.get(queryUrl).then(
-    function(response) {
+    if(movieName !== "") {
+        axios.get(moviequeryUrl).then(
+        function(response) {
 
-        console.log("--------------------------------------------")
-        console.log("This movie's title is: " + response.data.Title);
-        console.log("The release year of this movie is: " + response.data.Year);
-        console.log("This movie's IMDB rating is: " + response.data.imdbRating);
-        console.log("This movie's Rotten Tomatoes rating is: " + response.data.Ratings[1].Value);
-        console.log("This movie was made in: " + response.data.Country);
-        console.log("This movie's language is: " + response.data.Language);
-        console.log("This movie's plot is: " + response.data.Plot);
-        console.log("This movie stars: " + response.data.Actors);
-        console.log("--------------------------------------------");
+                console.log("\n--------------------------------------------")
+                console.log("You searched for: " + response.data.Title);
+                console.log("Release year: " + response.data.Year);
+                console.log("IMDB rating: " + response.data.imdbRating);
+                console.log("Rotten Tomatoes rating: " + response.data.Ratings[1].Value);
+                console.log("Country: " + response.data.Country);
+                console.log("Language(s): " + response.data.Language);
+                console.log("Plot: " + response.data.Plot);
+                console.log("Starring: " + response.data.Actors);
+                console.log("--------------------------------------------");
+        });
+    } else {
+        axios.get("http://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=trilogy").then(
+            function(response) {
+
+                console.log("\nOops, it looks like you didn't pick a movie. Here's a movie you might like...")
+                console.log("\n--------------------------------------------")
+                console.log("Tite: " + response.data.Title);
+                console.log("Release year: " + response.data.Year);
+                console.log("IMDB rating: " + response.data.imdbRating);
+                console.log("Rotten Tomatoes rating: " + response.data.Ratings[1].Value);
+                console.log("Country: " + response.data.Country);
+                console.log("Language(s): " + response.data.Language);
+                console.log("Plot: " + response.data.Plot);
+                console.log("Starring: " + response.data.Actors);
+                console.log("--------------------------------------------");
+
+            }
+        )
     }
-    );
 }
 
 
