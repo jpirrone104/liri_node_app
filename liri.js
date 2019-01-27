@@ -1,7 +1,8 @@
 // require("dotenv").config();
 // var keys = require("./keys.js");
 var axios = require("axios");
-var request = require("request");
+// var request = require("request");
+// var moment = require("moment");
 // var spotify = new Spotify(keys.spotify);
 
 var userInput1 = process.argv[2];
@@ -22,30 +23,37 @@ for (var i = 3; i < process.argv.length; i++) {
 function getConcert() {
 
     var artistName = userInput2
-    var queryUrl = "https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp";
+    var bandsqueryUrl = "https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp";
 
     // debug the actual URL
-    console.log(queryUrl);
+    console.log(bandsqueryUrl);
 
-    request((queryUrl), function(error, response, body) {
+    axios.get(bandsqueryUrl).then(function(response) {
 
-        if (!error && response.statusCode === 200) {
+        
 
-        var bandData = JSON.parse(body);
+        var bandData = response.data;
 
         if (bandData.length > 0) {
-            for(var i = 0; i < bandData.length; i++) {
+
+            var artistName2 = artistName.replace(/\+/g, " ");
+
+            console.log("Here is a list of upcoming shows for " + artistName2)
+
+            for(var i = 0; i < 5; i++) {
+                
                 console.log("--------------------------------------------")
-                console.log("This movie's title is: " + bandData[i].venue.name);
-        
-                console.log("--------------------------------------------");
+                console.log("Venue: " + bandData[i].venue.name);
+                console.log("Location: " + bandData[i].venue.country + ", " + bandData[i].venue.city);
+                console.log("Date: " + bandData[i].venue.name)
 
             }
         }
 
-    }
     });
+
 }
+
 
 
 //      * Name of the venue
