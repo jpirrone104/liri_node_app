@@ -3,6 +3,7 @@ var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
 var axios = require("axios");
 var moment = require("moment");
+var fs = require("fs");
 
 var spotify = new Spotify(keys.spotify);
 
@@ -42,7 +43,7 @@ function getConcert() {
 
             console.log("\nHere is a list of upcoming shows for: " + artistName2 + "\n")
 
-            for(var i = 0; i < 5; i++) {
+            for(var i = 0; i < bandData.length; i++) {
                 
                 console.log("--------------------------------------------")
                 console.log("Venue: " + bandData[i].venue.name);
@@ -60,8 +61,10 @@ function getConcert() {
 
 function getSpotify() {
 
-    var songName = userInput2
+    var songName = "'" + userInput2 + "'"
     var songName2 = songName.replace(/\+/g, " ");
+
+    //console.log(songName)
 
     if(songName !== "") {
         spotify.search({ type: 'track', query: songName, limit: 5 }, function(err, data) {
@@ -69,7 +72,7 @@ function getSpotify() {
             return console.log('Error occurred: ' + err);
             } else {
                 
-                console.log("\nSearching for... " + songName2 )
+                console.log("\nSearching for... " + songName2 + "\n" )
                 for(var i = 0; i < 5; i++) {
                     console.log("--------------------------------------------")
                     console.log("Artist: " + data.tracks.items[i].artists[0].name);
@@ -97,7 +100,7 @@ function getMovie() {
     var moviequeryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
     //debug the actual URL
-    console.log(moviequeryUrl);
+    //console.log(moviequeryUrl);
 
     if(movieName !== "") {
         axios.get(moviequeryUrl).then(
@@ -136,15 +139,26 @@ function getMovie() {
 }
 
 
-//    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
+function doWhat() {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        
+        if (error) {
+            return console.log(error);
+        } else {
+            
+            var data2 =  data.split(",")
+        
 
-// `node liri.js do-what-it-says`
+            userInput1 = data2[0]
+            userInput2 = data2[1]
 
-//    * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+            liriBot();
+        }
+        
+    })
 
-//      * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
+}
 
-//      * Edit the text in random.txt to test out the feature for movie-this and concert-this.
 
 function displayInstructions() {
 
@@ -152,6 +166,7 @@ function displayInstructions() {
 
 }
 
+function liriBot () {
 switch (userInput1) {
 
     case "movie-this":
@@ -173,3 +188,7 @@ switch (userInput1) {
         displayInstructions();
         break;
 }
+
+}
+
+liriBot();
