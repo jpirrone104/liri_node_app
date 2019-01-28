@@ -84,9 +84,12 @@ function getSpotify() {
             if (err) {
             return console.log('Error occurred: ' + err);
             } else {
+                //if results are returned 
                 if(data.tracks.items.length > 0) {
                 
                     console.log("\nSearching for... " + songName2 + "\n" )
+
+                    //iterate over first 5 results and add details to log to console
                     for(var i = 0; i < 5; i++) {
                         console.log("--------------------------------------------")
                         console.log("Artist: " + data.tracks.items[i].artists[0].name);
@@ -95,7 +98,8 @@ function getSpotify() {
                         console.log("Album: " + data.tracks.items[i].album.name)
                     }
                 } else {
-                
+                    
+                    //error handling
                     console.log("\nOops, it looks like you didn't search for a song. Here is one you might like...\n")
                     console.log("Artist: Ace of Base");
                     console.log("Track title: The Sign");
@@ -111,6 +115,7 @@ function getSpotify() {
 
 function getMovie() {
 
+    //give the variable 'movie name' the value of the second user input
     var movieName = userInput2
     var moviequeryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
@@ -120,7 +125,8 @@ function getMovie() {
     // if(response.data.length > 0) {
         axios.get(moviequeryUrl).then(
         function(response) {
-        
+            
+            //if the response is 'true', indicating a movie was found
             if(response.data.Response === "True"){
 
                 console.log("\n--------------------------------------------")
@@ -136,7 +142,7 @@ function getMovie() {
             } else {
                     axios.get("http://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=trilogy").then(
                         function(response) {
-
+                            //error handling
                             console.log("\nOops, it looks like you didn't pick a movie. Here's a movie you might like...")
                             console.log("\n--------------------------------------------")
                             console.log("Tite: " + response.data.Title);
@@ -157,18 +163,22 @@ function getMovie() {
 
 
 function doWhat() {
+
+    //read random text file 
     fs.readFile("random.txt", "utf8", function (error, data) {
         
         if (error) {
             return console.log(error);
         } else {
             
+            //split the lines in the file with a comma - place in an array
             var data2 =  data.split(",")
         
-
+            //give the user inputs the value of the text in the random file
             userInput1 = data2[0]
             userInput2 = data2[1]
 
+            //call the liri bot function to run the function as specified by the call in the random text file
             liriBot();
         }
         
@@ -179,12 +189,16 @@ function doWhat() {
 
 function displayInstructions() {
 
+    //when a command is not provided, the instructions are printed for the user
     console.log("Welcome to the Liri Bot! \n------------------\nTo search for a movie, type movie-this, followed by the movie title. \n------------------\nTo search for concerts type concert-this, followed by the artist name. \n------------------ \nTo search for an artist or song, type spotify-this-song, followed by the artist or song title")
 
 }
 
 function liriBot () {
+    //add a comma to the user inputs for placing in the log file 
     var log = userInput1 + ", " +  userInput2 
+
+    //log the user inputs in the log.txt file 
     fs.appendFile("log.txt", log + "\n" , function (err){
         if (err) {
             return console.log(err);
@@ -206,6 +220,8 @@ function liriBot () {
                 case "do-what-it-says":
                     doWhat();
                     break;
+
+                //if all else fails, display instructions again
                 default: 
                     displayInstructions();
                     break;
