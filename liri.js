@@ -61,7 +61,7 @@ function getConcert() {
 
 function getSpotify() {
 
-    var songName = "'" + userInput2 + "'"
+    var songName =  userInput2
     var songName2 = songName.replace(/\+/g, " ");
 
     //console.log(songName)
@@ -102,7 +102,7 @@ function getMovie() {
     //debug the actual URL
     //console.log(moviequeryUrl);
 
-    if(movieName !== "") {
+    if(movieName !== undefined && movieName !== "") {
         axios.get(moviequeryUrl).then(
         function(response) {
 
