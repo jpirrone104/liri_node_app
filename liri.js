@@ -167,28 +167,35 @@ function displayInstructions() {
 }
 
 function liriBot () {
-switch (userInput1) {
+    var log = userInput1 + ", " +  userInput2 
+    fs.appendFile("log.txt", log + "\n" , function (err){
+        if (err) {
+            return console.log(err);
+          }
+            switch (userInput1) {
 
-    case "movie-this":
-        getMovie();
-        break;
+                case "movie-this":
+                    getMovie();
+                    break;
 
-    case "spotify-this-song":
-        getSpotify();
-        break;
+                case "spotify-this-song":
+                    getSpotify();
+                    break;
 
-    case "concert-this":
-        getConcert();
-        break;
+                case "concert-this":
+                    getConcert();
+                    break;
 
-    case "do-what-it-says":
-        doWhat();
-        break;
-    default: 
-        displayInstructions();
-        break;
-}
+                case "do-what-it-says":
+                    doWhat();
+                    break;
+                default: 
+                    displayInstructions();
+                    break;
+            }
 
+        
+    });
 }
 
 liriBot();
