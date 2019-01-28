@@ -61,39 +61,43 @@ function getConcert() {
 function getSpotify() {
 
     var songName = userInput2
+    var songName2 = songName.replace(/\+/g, " ");
 
-    spotify.search({ type: 'track', query: songName }, function(err, data) {
-        if (err) {
-          return console.log('Error occurred: ' + err);
-        }
-       
-      console.log(data); 
-      });
+    if(songName !== "") {
+        spotify.search({ type: 'track', query: songName, limit: 5 }, function(err, data) {
+            if (err) {
+            return console.log('Error occurred: ' + err);
+            } else {
+                
+                console.log("\nSearching for... " + songName2 )
+                for(var i = 0; i < 5; i++) {
+                    console.log("--------------------------------------------")
+                    console.log("Artist: " + data.tracks.items[i].artists[0].name);
+                    console.log("Track title: " + data.tracks.items[i].name);
+                    console.log("Spotify Link: " + data.tracks.items[i].external_urls.spotify);
+                    console.log("Album: " + data.tracks.items[i].album.name)
+                }
+            }
+        
+        });
+    } else {
+                
+                    console.log("\nOops, it looks like you didn't search for a song. Here is one you might like...\n")
+                    console.log("Artist: Ace of Base");
+                    console.log("Track title: The Sign");
+                    console.log("Spotify Link: https://open.spotify.com/track/0hrBpAOgrt8RXigk83LLNE");
+                    console.log("Album: The Sign")
+                
+            }
 }
-
-// `node liri.js spotify-this-song '<song name here>'`
-
-//    * This will show the following information about the song in your terminal/bash window
-
-//      * Artist(s)
-
-//      * The song's name
-
-//      * A preview link of the song from Spotify
-
-//      * The album that the song is from
-
-//    * If no song is provided then your program will default to "The Sign" by Ace of Base.
-
-
 
 function getMovie() {
 
     var movieName = userInput2
     var moviequeryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
-    // // debug the actual URL
-    // console.log(moviequeryUrl);
+    //debug the actual URL
+    console.log(moviequeryUrl);
 
     if(movieName !== "") {
         axios.get(moviequeryUrl).then(
